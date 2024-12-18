@@ -1,0 +1,66 @@
+import java.io.*;
+import java.net.*;
+
+public class FTPServer {
+    public static void main(String[] args) throws IOException {
+        try (ServerSocket serverSocket = new ServerSocket(1010)) {
+            System.out.println("Server ready on port 1010...");
+            while (true) {
+                try (Socket socket = serverSocket.accept();
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                     PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)) {
+
+                    String option = reader.readLine();
+                    String fileName = reader.readLine();
+
+                    if ("upload".equals(option)) {
+                        try (FileOutputStream fos = new FileOutputStream(fileName)) {
+                            socket.getInputStream().transferTo(fos);
+                            System.out.println("File uploaded: " + fileName);
+                        }
+                    } else if ("download".equals(option)) {
+                        try (FileInputStream fis = new FileInputStream(fileName)) {
+                            fis.transferTo(socket.getOutputStream());
+                            System.out.println("File downloaded: " + fileName);
+                        } catch (FileNotFoundException e) {
+                            writer.println("File not found");
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+import java.io.*;
+import java.net.*;
+import java.util.Scanner;
+
+public class FTPClient {
+    public static void main(String[] args) throws IOException {
+        try (Socket socket = new Socket("localhost", 1010);
+             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+             Scanner scanner = new Scanner(System.in)) {
+
+            System.out.print("Enter 'upload' or 'download': ");
+            String option = scanner.nextLine();
+            System.out.print("Enter file name: ");
+            String fileName = scanner.nextLine();
+
+            writer.println(option);
+            writer.println(fileName);
+
+            if ("upload".equals(option)) {
+                try (FileInputStream fis = new FileInputStream(fileName)) {
+                    fis.transferTo(socket.getOutputStream());
+                    System.out.println("File uploaded: " + fileName);
+                }
+            } else if ("download".equals(option)) {
+                try (FileOutputStream fos = new FileOutputStream("downloaded_" + fileName)) {
+                    socket.getInputStream().transferTo(fos);
+                    System.out.println("File downloaded: downloaded_" + fileName);
+                }
+            }
+        }
+    }
+}
