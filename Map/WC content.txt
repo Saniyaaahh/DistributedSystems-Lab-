@@ -1,0 +1,40 @@
+of servers. The results of task can 
+be joined together to compute final results.
+ 
+MapReduce consists of 2 steps:
+Map Function: Converts input data into key-value pairs.
+Example - (Map function in word count)
+ 
+Reduce Function –Takes the output from Map as an input 
+and combines those data tuples into a smaller set of tuples.
+Example – (Reduce function in word count)
+ 
+Workflow of MapReduce consists of 5 steps:
+1. Splitting – The splitting parameter can be anything, e.g. splitting by 
+space, comma, semicolon, or even by a new line (‘\n’).
+2. Mapping – as explained above.
+3. Intermediate Splitting:
+Similar keys from all Mappers are grouped and sent to the same cluster for processing.
+4. Reduce – it is nothing but mostly group by phase.
+5.Combining – The last phase where all the data (individual result set 
+from each cluster) is combined together to form a result
+ 
+We need to write the splitting parameter, Map function logic, and Reduce function 
+logic. The rest of the remaining steps will execute automatically.
+Make sure that Hadoop is installed on your system with the Java SDK.
+ 
+Steps
+1. Open Eclipse> File > New > Java Project >( Name it –
+MRProgramsDemo) > Finish.
+2. Right Click > New > Package ( Name it - PackageDemo) > Finish.
+3. Right Click on Package > New > Class (Name it - WordCount).
+4. Add Following Reference Libraries:
+1. Right Click on Project > Build Path> Add External
+i) /usr/lib/hadoop-0.20/hadoop-core.jar
+ii) Usr/lib/hadoop-0.20/lib/Commons-cli-1.2.jar
+ 
+C:\Users\hp>cd desktop
+C: \Users\hp\Desktop>cd Map
+C:\Users\hp\Desktop\Map>javac WordCount. java
+C:\Users\hp\Desktop\Map>java WordCount C:\Users\hp\Desktop\Map\input.txt C:\Users\hp\Desktop\Maploutput.txt
+Word count completed. Results written to 
